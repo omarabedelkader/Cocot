@@ -48,7 +48,6 @@ CoSinglePackageScopedGlobalVariableFetcherTest >> testFirstPackageLevelThenGloba
 CoSinglePackageScopedGlobalVariableFetcherTest >> testResetShouldRestartGenerator [
 
 	| fetchedElements |
-	self halt.
 	self fetcher upToEnd; reset.
 	fetchedElements := self fetcher next: expectedElements size + 1.
 	fetchedElements withIndexDo: [ :each :index |

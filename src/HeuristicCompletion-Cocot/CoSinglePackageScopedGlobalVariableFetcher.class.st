@@ -26,7 +26,7 @@ CoSinglePackageScopedGlobalVariableFetcher >> entriesDo: aBlock [
 	
 	"forced to copy the keys but let us try."
 	keys := self systemNavigation keys.
-	closeClassNames do: [ :e | keys remove: e ].
+	closeClassNames do: [ :e | keys remove: e ifAbsent: [ ] ].
 	"we could not use remove: ifAbsent: but this would hide something. 
 	Because I do not get why the navigation should not contain the same objects than before."
 	
