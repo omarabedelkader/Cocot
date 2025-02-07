@@ -11,37 +11,30 @@ Class {
 { #category : 'running' }
 CoSinglePackageScopedGlobalVariableFetcherTest >> setUp [
 
-	self setUpSomeClassesInAndOutsidePackage. 
-	
-	fetcher := CoSinglePackageScopedGlobalVariableFetcher new.
-	fetcher packages: { PackageOrganizer default packageNamed: 'HeuristicCompletion-Cocot'  }.
-	fetcher systemNavigation: self systemNavigation.
-	fetcher filter: (CoBeginsWithFilter caseSensitive: false filterString: 'AI').
-
-	expectedElements := {
-		NECGlobalEntry contents: 'AInP1' node: nil .
-		NECGlobalEntry contents: 'AAInP1' node: nil .
-		NECGlobalEntry contents: 'AA' node: nil }
-]
-
-{ #category : 'running' }
-CoSinglePackageScopedGlobalVariableFetcherTest >> setUpSomeClassesInAndOutsidePackage [
-
 	| a b c |
 	completionClass := CoMockClass new name: 'CoInP1'. 
 	a := CoMockClass new name: 'AInP1'.
 	b := CoMockClass new name: 'AAInP1'.
 	c := CoMockClass new name: 'AA'.
 	package := CoMockPackage new. 
+	package definedClasses: { a . b . c }.
 			
-
 	systemNavigation := CoMockSystemNavigation new
-		globals: {'Ab' . 'B' . 'AIGlobal' };
-		yourself
+		globals: OrderedCollection <- {'Ab' . 'B' . 'AIGlobal' . 'AInP1' . 'AAInP1'. 'AA' } ;
+		yourself.
+
+	fetcher := CoSinglePackageScopedGlobalVariableFetcher new. 
+	fetcher packages: { package }.
+	fetcher systemNavigation: systemNavigation.
+	fetcher filter: (CoBeginsWithFilter caseSensitive: false filterString: 'AI').
+
+	expectedElements := {
+		NECGlobalEntry contents: 'AInP1' node: nil .
+		NECGlobalEntry contents: 'AIGlobal' node: nil }
 ]
 
 { #category : 'running' }
-CoSinglePackageScopedGlobalVariableFetcherTest >> testNextManyShouldReturnCollection [
+CoSinglePackageScopedGlobalVariableFetcherTest >> testFirstPackageLevelThenGlobal [
 
 	| fetchedElements expected |
 	fetchedElements := self fetcher next: 2.
