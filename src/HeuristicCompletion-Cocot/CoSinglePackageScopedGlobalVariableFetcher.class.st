@@ -26,7 +26,9 @@ CoSinglePackageScopedGlobalVariableFetcher >> entriesDo: aBlock [
 	
 	"forced to copy the keys but let us try."
 	keys := self systemNavigation keys.
-	keys removeAll: closeClassNames.
+	closeClassNames do: [ :e | keys remove: e ].
+	"we could not use remove: ifAbsent: but this would hide something. 
+	Because I do not get why the navigation should not contain the same objects than before."
 	
 	keys	do: [ :globalName | (globalName beginsWith: string caseSensitive: case) 
 										ifTrue: [ aBlock value: (NECGlobalEntry contents: globalName node: astNode) ] ]

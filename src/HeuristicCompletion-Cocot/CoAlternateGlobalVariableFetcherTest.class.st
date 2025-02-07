@@ -12,10 +12,10 @@ Class {
 CoAlternateGlobalVariableFetcherTest >> setUp [
 
 	systemNavigation := CoMockSystemNavigation new
-		globals: {'Ab' . 'B' . 'AIGlobal' };
+		globals: {'Ab' . 'B' . 'AIGlobal' . 'AIa' };
 		yourself.
 
-	fetcher := CoSinglePackageScopedGlobalVariableFetcher new.
+	fetcher := CoGlobalVariableFetcher new.
 	
 	fetcher systemNavigation: systemNavigation.
 	fetcher filter: (CoBeginsWithFilter caseSensitive: false filterString: 'AI').
@@ -23,7 +23,9 @@ CoAlternateGlobalVariableFetcherTest >> setUp [
 	completionClass := CoMockClass new name: 'CoInP1'. 
 	
 	expectedElements := {
-		NECGlobalEntry contents: 'AIGlobal' node: nil  }
+		NECGlobalEntry contents: 'AIGlobal' node: nil .
+		NECGlobalEntry contents: 'AIa' node: nil.
+		  }
 ]
 
 { #category : 'running' }
@@ -35,7 +37,8 @@ CoAlternateGlobalVariableFetcherTest >> testEnvironment [
 			allGlobalNamesStartingWith: 'AI' 
 			do: [ :each | o add: each ] caseSensitive: false.
 	self assert: o first equals: 'AIGlobal'.
-	self assert: o size equals: 1.
+	self assert: o second equals: 'AIa'.
+	self assert: o size equals: 2.
 
 ]
 
@@ -51,12 +54,11 @@ CoAlternateGlobalVariableFetcherTest >> testFirst [
 ]
 
 { #category : 'running' }
-CoAlternateGlobalVariableFetcherTest >> testFirstTwoButOnlyOne [
+CoAlternateGlobalVariableFetcherTest >> testFirstThreeButOnlyTwo [
 
-	| fetchedElements expected |
-	fetchedElements := self fetcher next: 2.
-	expected := { self firstExpectedElement }.
+	| fetchedElements  |
+	fetchedElements := self fetcher next: 3.
 	fetchedElements withIndexDo: [ :each :index |
-		self assertEntry: each equals: (expected at: index) ].
-	self assert: fetchedElements size equals: expected size
+		self assertEntry: each equals: (expectedElements at: index) ].
+	self assert: fetchedElements size equals: expectedElements size
 ]
