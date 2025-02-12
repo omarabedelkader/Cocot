@@ -1,40 +1,9 @@
 Class {
 	#name : 'CoAutononousSinglePackageScopedGlobalVariableFetcherTest',
-	#superclass : 'TestCase',
-	#instVars : [
-		'package',
-		'completionClass',
-		'systemNavigation',
-		'fetcher',
-		'expectedElements'
-	],
+	#superclass : 'CoMiniTestCase',
 	#category : 'HeuristicCompletion-Cocot',
 	#package : 'HeuristicCompletion-Cocot'
 }
-
-{ #category : 'assert' }
-CoAutononousSinglePackageScopedGlobalVariableFetcherTest >> assertEntry: anEntry equals: expectedEntry [
-
-	"Entries do not define equality :("
-	self assert: anEntry class equals: expectedEntry class.
-	self assert: anEntry contents equals: expectedEntry contents
-]
-
-{ #category : 'accessing' }
-CoAutononousSinglePackageScopedGlobalVariableFetcherTest >> fetcher [ 
-
-	^ fetcher
-]
-
-{ #category : 'accessing' }
-CoAutononousSinglePackageScopedGlobalVariableFetcherTest >> firstExpectedElement [
-	^ expectedElements first
-]
-
-{ #category : 'accessing' }
-CoAutononousSinglePackageScopedGlobalVariableFetcherTest >> secondExpectedElement [
-	^ expectedElements second
-]
 
 { #category : 'one local one global' }
 CoAutononousSinglePackageScopedGlobalVariableFetcherTest >> setUpOneLocalThenGlobal [ 
