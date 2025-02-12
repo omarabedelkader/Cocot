@@ -1,15 +1,43 @@
 Class {
-	#name : 'CoSinglePackageScopedGlobalVariableFetcherTest',
-	#superclass : 'CoBasicFetcherWithElementsTest',
+	#name : 'CoAutononousSinglePackageScopedGlobalVariableFetcherTest',
+	#superclass : 'TestCase',
 	#instVars : [
-		'package'
+		'package',
+		'completionClass',
+		'systemNavigation',
+		'fetcher',
+		'expectedElements'
 	],
 	#category : 'HeuristicCompletion-Cocot',
 	#package : 'HeuristicCompletion-Cocot'
 }
 
 { #category : 'running' }
-CoSinglePackageScopedGlobalVariableFetcherTest >> setUp [
+CoAutononousSinglePackageScopedGlobalVariableFetcherTest >> assertEntry: anEntry equals: expectedEntry [
+
+	"Entries do not define equality :("
+	self assert: anEntry class equals: expectedEntry class.
+	self assert: anEntry contents equals: expectedEntry contents
+]
+
+{ #category : 'running' }
+CoAutononousSinglePackageScopedGlobalVariableFetcherTest >> fetcher [ 
+
+	^ fetcher
+]
+
+{ #category : 'accessing' }
+CoAutononousSinglePackageScopedGlobalVariableFetcherTest >> firstExpectedElement [
+	^ expectedElements first
+]
+
+{ #category : 'helpers' }
+CoAutononousSinglePackageScopedGlobalVariableFetcherTest >> secondExpectedElement [
+	^ expectedElements second
+]
+
+{ #category : 'running' }
+CoAutononousSinglePackageScopedGlobalVariableFetcherTest >> setUpOneLocalThenGlobal [ 
 
 	| a b c |
 	completionClass := CoMockClass new name: 'CoInP1'. 
@@ -34,9 +62,10 @@ CoSinglePackageScopedGlobalVariableFetcherTest >> setUp [
 ]
 
 { #category : 'running' }
-CoSinglePackageScopedGlobalVariableFetcherTest >> testFirstPackageLevelThenGlobal [
+CoAutononousSinglePackageScopedGlobalVariableFetcherTest >> testFirstPackageLevelThenGlobal [
 
 	| fetchedElements expected |
+	self setUpOneLocalThenGlobal. 
 	fetchedElements := self fetcher next: 2.
 	expected := { self firstExpectedElement . self secondExpectedElement }.
 	fetchedElements withIndexDo: [ :each :index |
@@ -45,9 +74,10 @@ CoSinglePackageScopedGlobalVariableFetcherTest >> testFirstPackageLevelThenGloba
 ]
 
 { #category : 'running' }
-CoSinglePackageScopedGlobalVariableFetcherTest >> testResetShouldRestartGenerator [
+CoAutononousSinglePackageScopedGlobalVariableFetcherTest >> testResetShouldRestartGenerator [
 
 	| fetchedElements |
+	self setUpOneLocalThenGlobal. 
 	self fetcher upToEnd; reset.
 	fetchedElements := self fetcher next: expectedElements size + 1.
 	fetchedElements withIndexDo: [ :each :index |
