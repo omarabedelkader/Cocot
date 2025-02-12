@@ -24,7 +24,7 @@ CoAutononousPackageScopedGlobalVariableFetcherTest >> setUpThreePackages [
 		"
 	
 	
-	| ai12 ai13 a11 aa1 ai2 ai23 aa2 ai3 a33 blop classesInP1 classesInP2 classesInP3 organizer |
+	| ai12 ai13 a11 aa1 ai2 ai23 aa2 ai3 a33 blop classesInP1 classesInP2 classesInP3 organizer dict |
 	completionClass := CoMockClass new name: 'CoInP1'. 
 	ai12 := CoMockClass new name: 'Ai12'.
 	ai13 := CoMockClass new name: 'Ai13'.
@@ -62,8 +62,14 @@ CoAutononousPackageScopedGlobalVariableFetcherTest >> setUpThreePackages [
 	organizer packages: { package1 . package2. package3 }.
 	 { package1 . package2. package3 } do: [ :p | p organizer: organizer ].
 	
+	
+	"We need an environment with keys. We create a dummy dictionary with keys and just the same as value"
+	dict := Dictionary new. 
+	{'AiGlobal1' . 'AiGlobal2' . 'Ai12' .  'Ai13' . 'A11' .'Aa1' . 'Ai2' . 'Ai23' . 'Aa2' . 'Ai3' . 'A33' . 'Blop'}
+		do: [ :each | dict at: each put: each ].
+		
 	systemNavigation := CoMockSystemNavigation new
-		globals: OrderedCollection <- {'AiGlobal1' . 'AiGlobal2' . 'Ai12' .  'Ai13' . 'A11' .'Aa1' . 'Ai2' . 'Ai23' . 'Aa2' . 'Ai3' . 'A33' . 'Blop'} ;
+		globals: dict;
 		yourself.
 
 	fetcher := CoPackageScopedGlobalVariableFetcher new. 

@@ -28,6 +28,14 @@ CoPackageScopedGlobalVariableFetcher >> completionClass: anObject [
 CoPackageScopedGlobalVariableFetcher >> entriesDo: aBlock [
 
 	| string case closeClassNames keys organizer packageNamePart friendClassNames friendPackageNames | 
+	completionClass isNil
+		ifTrue: [
+				"can we call another fetcher?" 
+					^ self systemNavigation
+							allGlobalNamesStartingWith: filter completionString
+							do: [ :e | aBlock value: (NECGlobalEntry contents: e node: astNode) ]
+							caseSensitive: (NECPreferences caseSensitive) ].
+	
 	string := filter completionString.
 	case := NECPreferences caseSensitive.
 	organizer := completionClass package organizer.
@@ -64,7 +72,7 @@ CoPackageScopedGlobalVariableFetcher >> entriesDo: aBlock [
 	
 	"Global"
 	"forced to copy the keys but let us try."
-	keys := self systemNavigation keys.
+	keys := self systemNavigation environment keys asOrderedCollection.
 	closeClassNames do: [ :e | keys remove: e ifAbsent: [ ] ].
 	friendClassNames do: [ :e | keys remove: e ifAbsent: [ ] ].
 	"we could not use remove: ifAbsent: but this would hide something. 
