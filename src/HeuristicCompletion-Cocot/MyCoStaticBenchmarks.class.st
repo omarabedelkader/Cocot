@@ -23,9 +23,10 @@ MyCoStaticBenchmarks class >> benchNeCompletion [
 	"self benchNeCompletion"
 
 	<script>
-	
-	^ self runForPackage:
-		(PackageOrganizer default packageNamed: 'NECompletion')
+	^ (self
+		  runForPackage:
+			  (PackageOrganizer default packageNamed: 'NECompletion'))
+		  inspect
 ]
 
 { #category : 'benchmarking' }
@@ -33,8 +34,8 @@ MyCoStaticBenchmarks class >> benchNeCompletionWithPackageScope [
 	"self benchNeCompletionWithPackageScope"
 
 	<script>
-	^ self runCustomForPackage:
-		  (PackageOrganizer default packageNamed: 'NECompletion')
+	^ (self runCustomForPackage:
+		  (PackageOrganizer default packageNamed: 'NECompletion')) inspect
 ]
 
 { #category : 'benchmarking' }
@@ -73,6 +74,7 @@ MyCoStaticBenchmarks class >> runForPackage: aPackage [
 			 add: CoInstanceAccessibleVariablesHeuristic new;
 			 add: CoGlobalVariablesHeuristic new;
 			 build).
+
 	benchmark := self new
 		             scope: (CoBenchmarkPackage on: aPackage);
 		             builder: builder;
@@ -85,20 +87,19 @@ MyCoStaticBenchmarks class >> runForPackage: aPackage [
 MyCoStaticBenchmarks >> benchCallsite: aMessageNode atPosition: aPosition [
 
 	| receiver |
-
 	receiver := aMessageNode receiver.
 
 	2 to: (aMessageNode receiver name size min: 8) do: [ :index |
 		| prefix startTime endTime executionTime completion candidates completionIndex previousResultsPerIndexPerPrefixSize |
 		"Start timing"
 		startTime := Time millisecondClockValue.
-		
+
 		prefix := receiver name copyFrom: 1 to: index.
 		aMessageNode receiver: (OCVariableNode named: prefix).
 
-
+	
 		completion := builder
-			              node: aMessageNode;
+			              node: aMessageNode receiver;
 			              completionContext: (CoBenchmarkContext new
 					               callsite: aMessageNode;
 					               position: aPosition;
