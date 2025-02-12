@@ -6,8 +6,9 @@ Class {
 		'package2',
 		'package3'
 	],
-	#category : 'HeuristicCompletion-Cocot',
-	#package : 'HeuristicCompletion-Cocot'
+	#category : 'HeuristicCompletion-Cocot-PackageScope',
+	#package : 'HeuristicCompletion-Cocot',
+	#tag : 'PackageScope'
 }
 
 { #category : 'one local one global' }

@@ -8,8 +8,9 @@ Class {
 		'fetcher',
 		'expectedElements'
 	],
-	#category : 'HeuristicCompletion-Cocot',
-	#package : 'HeuristicCompletion-Cocot'
+	#category : 'HeuristicCompletion-Cocot-PackageScope',
+	#package : 'HeuristicCompletion-Cocot',
+	#tag : 'PackageScope'
 }
 
 { #category : 'assert' }

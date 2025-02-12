@@ -8,8 +8,9 @@ Class {
 		'packages',
 		'completionClass'
 	],
-	#category : 'HeuristicCompletion-Cocot',
-	#package : 'HeuristicCompletion-Cocot'
+	#category : 'HeuristicCompletion-Cocot-PackageScope',
+	#package : 'HeuristicCompletion-Cocot',
+	#tag : 'PackageScope'
 }
 
 { #category : 'accessing' }
