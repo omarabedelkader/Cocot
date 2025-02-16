@@ -139,6 +139,37 @@ CoAutononousPackageScopedGlobalVariableFetcherTest >> testFirstPackageOfCompleti
 ]
 
 { #category : 'one local one global' }
+CoAutononousPackageScopedGlobalVariableFetcherTest >> testNoClassesInPackage [
+	"Tests the behavior if a package has no classes that match 'Ai'."
+
+	| localPackage localFetcher localSystemNavigation fetchedElements |
+	localPackage := CoMockPackage new.
+	localPackage name: 'Empty-Package'.
+	localPackage definedClasses: #(  ).
+
+	localSystemNavigation := CoMockSystemNavigation new
+		                         globals: { 'AiGlobal1'. 'AiGlobal2' };
+		                         yourself.
+
+	localFetcher := CoPackageScopedGlobalVariableFetcher new.
+	localFetcher
+		packages: { localPackage };
+		completionClass: nil;
+		systemNavigation: localSystemNavigation;
+		filter: (CoBeginsWithFilter caseSensitive: false filterString: 'Ai').
+
+	fetchedElements := localFetcher upToEnd.
+
+	"Because the package is empty and we have no 'completionClass', 
+	 the default logic might just revert to the global fetcher or return the 2 globals."
+
+	self assert: fetchedElements size equals: 2.
+	self
+		assert: (fetchedElements collect: #contents) asSet
+		equals: #( 'AiGlobal1' 'AiGlobal2' ) asSet
+]
+
+{ #category : 'one local one global' }
 CoAutononousPackageScopedGlobalVariableFetcherTest >> testRequestMoreThanAvailableOnlyReturnAvailable [
 
 	| fetchedElements expected |
