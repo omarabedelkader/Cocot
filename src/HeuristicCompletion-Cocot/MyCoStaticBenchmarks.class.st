@@ -148,51 +148,6 @@ MyCoStaticBenchmarks >> benchCallsite: aMessageNode atPosition: aPosition [
 	aMessageNode receiver: receiver
 ]
 
-{ #category : 'benchmarks' }
-MyCoStaticBenchmarks >> diff: anotherBenchmark [
-    | results keysOfSelf keysOfOther allIndexKeys |
-    
-    results := Dictionary new.
-    keysOfSelf := self completionBenchs keys.
-    keysOfOther := anotherBenchmark completionBenchs keys.
-    allIndexKeys := keysOfSelf union: keysOfOther.
-    
-    allIndexKeys do: [:completionIndex |
-        | selfIndexDict otherIndexDict prefixSizesOfSelf prefixSizesOfOther allPrefixSizes |
-       
-        selfIndexDict := (self completionBenchs 
-                            at: completionIndex
-                            ifAbsent: [Dictionary new]).
-        otherIndexDict := (anotherBenchmark completionBenchs 
-                            at: completionIndex
-                            ifAbsent: [Dictionary new]).
-        
-        prefixSizesOfSelf := selfIndexDict keys.
-        prefixSizesOfOther := otherIndexDict keys.
-        allPrefixSizes := prefixSizesOfSelf union: prefixSizesOfOther.
-        
-        allPrefixSizes do: [:prefixSize |
-            | selfValue otherValue selfCount otherCount difference |
-            
-            selfValue := selfIndexDict 
-                            at: prefixSize 
-                            ifAbsent: [{ 0. Set new }].
-            otherValue := otherIndexDict 
-                            at: prefixSize 
-                            ifAbsent: [{ 0. Set new }].
-            
-            selfCount := selfValue first.
-            otherCount := otherValue first.         
-            difference := selfCount - otherCount.
-            results 
-                at: (completionIndex -> prefixSize)
-                put: difference.
-        ].
-    ].
-    
-    ^ results
-]
-
 { #category : 'benchmarking' }
 MyCoStaticBenchmarks >> run [
 
