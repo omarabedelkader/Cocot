@@ -5,8 +5,7 @@
 benchA := MyCoStaticBenchmarks benchNeCompletion.
 benchB := MyCoStaticBenchmarks benchNeCompletionWithPackageScope.
 
-difference := benchA diff: benchB.
-difference inspect
+comparison := benchA diff: benchB.
 
 
 ```
