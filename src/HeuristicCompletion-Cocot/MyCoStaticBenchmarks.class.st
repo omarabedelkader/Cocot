@@ -149,6 +149,74 @@ MyCoStaticBenchmarks >> benchCallsite: aMessageNode atPosition: aPosition [
 ]
 
 { #category : 'benchmarking' }
+MyCoStaticBenchmarks >> diff: anotherBenchmark [
+
+    | tableDataSelf tableDataOther tableDataDifference |
+    "Generate accuracy tables for self"
+    tableDataSelf := self completionIndexes collect: [ :completionIndexRange |
+        | label rowData |
+        
+        "Compute the Prefix column value"
+        label := '% '.
+        label := label , (completionIndexRange size = 1
+            ifTrue: [ { 'fail'. '1st'. '2nd'. '3rd' } at: (completionIndexRange first + 1) ]
+            ifFalse: [ completionIndexRange first asString , '-' , completionIndexRange last asString ]).
+    
+        "Compute the accuracy values for each prefix size"
+        rowData := self prefixSizes collect: [ :prefixSize |
+            (self accuracyForCompletionIndex: completionIndexRange withPrefixSize: prefixSize) * 100
+                printShowingDecimalPlaces: 2
+        ].
+    
+        "Combine Prefix column and computed values"
+        { label } , rowData.
+    ].
+    
+    "Generate accuracy tables for anotherBenchmark"
+    tableDataOther := anotherBenchmark completionIndexes collect: [ :completionIndexRange |
+        | label rowData |
+        
+        "Compute the Prefix column value"
+        label := '% '.
+        label := label , (completionIndexRange size = 1
+            ifTrue: [ { 'fail'. '1st'. '2nd'. '3rd' } at: (completionIndexRange first + 1) ]
+            ifFalse: [ completionIndexRange first asString , '-' , completionIndexRange last asString ]).
+    
+        "Compute the accuracy values for each prefix size"
+        rowData := anotherBenchmark prefixSizes collect: [ :prefixSize |
+            (anotherBenchmark accuracyForCompletionIndex: completionIndexRange withPrefixSize: prefixSize) * 100
+                printShowingDecimalPlaces: 2
+        ].
+    
+        "Combine Prefix column and computed values"
+        { label } , rowData.
+    ].
+    
+    "Calculate the difference between the two tables"
+    tableDataDifference := (1 to: tableDataSelf size) collect: [ :index |
+        | label diffRowData |
+    
+        label := (tableDataSelf at: index) first. "Keep the prefix label"
+        diffRowData := ((tableDataSelf at: index) allButFirst) withIndexCollect: [ :value :i |
+            | valueA valueB difference |
+    
+            valueA := value asNumber ifNil: [ 0 ].
+            valueB := ((tableDataOther at: index) at: (i + 1)) asNumber ifNil: [ 0 ].
+            difference := valueA - valueB.
+            
+            difference printShowingDecimalPlaces: 2
+        ].
+    
+        { label } , diffRowData.
+    ].
+    
+    "Return a dictionary with both tables and the computed difference"
+    ^ { 'BenchmarkA' -> tableDataSelf. 'BenchmarkB' -> tableDataOther. 'Difference' -> tableDataDifference }.
+
+
+]
+
+{ #category : 'benchmarking' }
 MyCoStaticBenchmarks >> run [
 
 	scope methodsDo: [ :method |
